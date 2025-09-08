@@ -111,6 +111,14 @@
                         </div>
                     @endif
                 </div>
+
+                {{-- EXT: Character Genetics Data --}}
+                <div class="mb-3">
+                    <div><h5>Genes</h5></div>
+                    @include('character._genomes', ['character' => $character])
+                </div>
+                {{-- END EXT --}}
+
                 <div>
                     <strong>Uploaded:</strong> {!! pretty_date($image->created_at) !!}
                 </div>
@@ -121,6 +129,9 @@
                 @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
                     <div class="mt-3">
                         <a href="#" class="btn btn-outline-info btn-sm edit-features" data-id="{{ $image->id }}"><i class="fas fa-cog"></i> Edit</a>
+                        {{-- EXT: Character Genetics Data --}}
+                        @if(Auth::user()->hasPower('view_hidden_genetics')) <a href="#" class="btn btn-outline-info btn-sm add-genome mx-1"><i class="fas fa-plus mr-1"></i><i class="fas fa-dna"></i></a> @endif 
+                        {{-- END EXT --}}
                     </div>
                 @endif
             </div>

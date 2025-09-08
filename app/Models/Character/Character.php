@@ -193,6 +193,17 @@ class Character extends Model {
         return $this->belongsToMany(Item::class, 'character_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('character_items.deleted_at');
     }
 
+     
+    /**
+     * EXT: Character Genetics Data
+     * 
+     * Get the character's genomes.
+     */
+    public function genomes()
+    {
+        return $this->hasMany('App\Models\Character\CharacterGenome', 'character_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES

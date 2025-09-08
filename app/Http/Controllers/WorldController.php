@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genetics\Loci; /* EXT: Character Genetics Data */
 use App\Models\Character\CharacterCategory;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
@@ -67,6 +68,35 @@ class WorldController extends Controller {
 
         return view('world.rarities', [
             'rarities' => $query->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    
+    /**
+     * EXT: Character Genetics Data
+     * 
+     * Shows the genetics page.
+     * @todo allow people to search for genetics based on the name of alleles in the group?
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getGenetics(Request $request)
+    {
+        $query = Loci::query();
+        if (!(Auth::user() && Auth::user()->hasPower('view_hidden_genetics'))) $query->visible();
+
+        $data = $request->only([
+            'name',
+            'variant',
+        ]);
+
+        if(isset($data['variant']) && $data['variant'] != 'none') $query->where('type', $data['variant']);
+        if(isset($data['name']) && $data['name'] != '') $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+        return view('world.genetics', [
+            'genetics' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+            'options' => [0 => "Any Type", 'gene' => "Standard", 'gradient' => "Gradient", 'numeric' => "Numeric"],
         ]);
     }
 
