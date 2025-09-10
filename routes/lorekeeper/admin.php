@@ -87,11 +87,9 @@ Route::group(['prefix' => 'images', 'middleware' => 'power:edit_site_settings'],
 
 // EXT: Character Genetics Data
 // GENETICS
-Route::group(['prefix' => 'genetics', 'namespace' => 'Data', 'middleware' => ['power:view_hidden_genetics']], function() {
-
+Route::group(['prefix' => 'genetics', 'namespace' => 'Data', 'middleware' => ['power:view_hidden_genetics']], function () {
     // GENETIC DATA
-    Route::middleware(['power:edit_data'])->group(function() {
-
+    Route::middleware(['power:edit_data'])->group(function () {
         Route::get('genes', 'GeneticsController@getIndex');
         Route::get('sort', 'GeneticsController@getSortIndex');
         Route::get('create', 'GeneticsController@getCreateLoci');
@@ -104,12 +102,10 @@ Route::group(['prefix' => 'genetics', 'namespace' => 'Data', 'middleware' => ['p
         Route::post('edit/{id}', 'GeneticsController@postCreateEditLoci');
         Route::post('delete/{id}', 'GeneticsController@postDeleteLoci');
         Route::post('delete-allele/{id}', 'GeneticsController@postDeleteAllele');
-
     });
 
     // ROLLERS & SUCH
-    Route::middleware(['power:manage_characters'])->group(function() {
-
+    Route::middleware(['power:manage_characters'])->group(function () {
         Route::get('roller', 'GeneticsController@getBreedingRoller');
         Route::get('fetch-genomes', 'GeneticsController@getCharacterGenomes');
         Route::get('preview-breeding', 'GeneticsController@getPossibleChildGenomes');
@@ -117,9 +113,7 @@ Route::group(['prefix' => 'genetics', 'namespace' => 'Data', 'middleware' => ['p
         Route::get('logs/breeding/{id}', 'GeneticsController@getBreedingLog');
 
         Route::post('roll-litter', 'GeneticsController@postBreedingRoll');
-
     });
-
 });
 // END EXT
 
@@ -352,7 +346,6 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
 
     Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
     Route::get('check-genes', 'CharacterController@getCreateCharacterMyoGenes'); // EXT: Character Genetics Data
-
 });
 
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function () {
@@ -414,7 +407,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware'
     Route::get('{slug}/genome/{id}/delete', 'CharacterController@getDeleteCharacterGenome');
     Route::post('{slug}/genome/{id}/delete', 'CharacterController@postDeleteCharacterGenome');
     // END EXT
-
 });
 // Might rewrite these parts eventually so there's less code duplication...
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function () {
@@ -444,7 +436,6 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters', 'middleware' => 'p
     Route::get('{id}/genome/{gid}/delete', 'CharacterController@getDeleteMyoGenome');
     Route::post('{id}/genome/{gid}/delete', 'CharacterController@postDeleteMyoGenome');
     // END EXT
-
 });
 
 // RAFFLES

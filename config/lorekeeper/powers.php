@@ -36,8 +36,8 @@ return [
         'description' => 'Allow rank to grant and remove items from user inventories, as well as grant/remove currency from users and characters.',
     ],
     'view_hidden_genetics' => [ // EXT: Character Genetics Data
-        'name' => 'View Hidden Genetics',
-        'description' => 'Allow rank to view genes & genomes that have their data hidden to regular users.'
+        'name'        => 'View Hidden Genetics',
+        'description' => 'Allow rank to view genes & genomes that have their data hidden to regular users.',
     ],
     'manage_characters'  => [
         'name'        => 'Manage Masterlist',

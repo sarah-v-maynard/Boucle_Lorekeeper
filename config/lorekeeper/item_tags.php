@@ -27,8 +27,8 @@ return [
 
     // EXT: Character Genetics Data
     'gene_reveal' => [
-        'name' => 'Gene Reveal',
-        'text_color' => '#ffffff',
-        'background_color' => '#A8CE5E'
+        'name'             => 'Gene Reveal',
+        'text_color'       => '#ffffff',
+        'background_color' => '#A8CE5E',
     ],
 ];
