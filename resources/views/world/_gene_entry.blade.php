@@ -6,12 +6,12 @@
             @endif
             {!! $loci->displayName !!}
         </h3>
-        @if ($loci->type == "gene")
+        @if ($loci->type == 'gene')
             <strong>Type</strong>: Standard<br>
             <strong>Alleles</strong>:
-            @if(Auth::check() && Auth::user()->hasPower('view_hidden_genetics'))
+            @if (Auth::check() && Auth::user()->hasPower('view_hidden_genetics'))
                 @foreach ($loci->alleles as $allele)
-                    <div class="d-inline text-monospace {{ $allele->is_visible ? "" : "text-muted font-italic" }} px-1" data-toggle="tooltip" title="{{ $allele->summary }}">{!! $allele->displayName !!}</div>
+                    <div class="d-inline text-monospace {{ $allele->is_visible ? '' : 'text-muted font-italic' }} px-1" data-toggle="tooltip" title="{{ $allele->summary }}">{!! $allele->displayName !!}</div>
                 @endforeach
             @else
                 @foreach ($loci->visibleAlleles as $allele)

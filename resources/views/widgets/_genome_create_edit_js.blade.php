@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         // Existing Data Listeners
         addGeneCreationListener($("#geneList").parent().find(".add-genetics-row"));
         addGeneSelectionListener($("#geneList").find(".gene-select"));
@@ -10,7 +10,7 @@
 
         // Helper Functions
         function addGeneCreationListener($btn) {
-            $btn.click(function(e){
+            $btn.click(function(e) {
                 e.preventDefault();
                 $clone = $(".genetics-row").clone();
                 $clone.removeClass("genetics-row hide");
@@ -19,34 +19,39 @@
                 addGeneDeletionListener($clone.find(".delete-genetics-row"));
             });
         }
+
         function addGeneDeletionListener($btn) {
-            $btn.click(function(e){
+            $btn.click(function(e) {
                 e.preventDefault();
                 $(this).parent().remove();
             });
         }
+
         function addGeneSelectionListener($select) {
             $select.selectize();
-            $select.change(function(){
+            $select.change(function() {
                 var loci = $(this).val();
                 var options = $(this).parent().find(".gene-select-options");
                 $.ajax({
-                    type: "GET", url: "{{ url('admin/masterlist/check-genes') }}?loci="+loci, dataType: "text"
-                }).done(function (res) {
+                    type: "GET",
+                    url: "{{ url('admin/masterlist/check-genes') }}?loci=" + loci,
+                    dataType: "text"
+                }).done(function(res) {
                     options.html(res);
                     options.find(".allele-select").selectize();
-                    options.find(".gradient-gene-input").change(function(e){
+                    options.find(".gradient-gene-input").change(function(e) {
                         validateGradientInput($(this));
                     });
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                }).fail(function(jqXHR, textStatus, errorThrown) {
                     alert("AJAX call failed: " + textStatus + ", " + errorThrown);
                 });
             });
         }
+
         function validateGradientInput($input) {
             var val = $input.val();
-            while(val.length < $input.attr('maxlength')) val += "-";
-            $input.val(val.replace(/[1]/g,"+").replace(/[^-+]/g,"-"));
+            while (val.length < $input.attr('maxlength')) val += "-";
+            $input.val(val.replace(/[1]/g, "+").replace(/[^-+]/g, "-"));
         }
     });
 </script>
