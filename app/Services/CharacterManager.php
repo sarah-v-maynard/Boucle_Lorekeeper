@@ -6,22 +6,20 @@ use App\Facades\Notifications;
 use App\Facades\Settings;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterBookmark;
+use App\Models\Character\CharacterBreedingLog;
+use App\Models\Character\CharacterBreedingLogRelation;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterCurrency;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterFeature;
-use App\Models\Character\CharacterImage;
-use App\Models\Character\CharacterTransfer;
-
 // EXT: Character Genetics Data
-use App\Models\Character\CharacterBreedingLog;
-use App\Models\Character\CharacterBreedingLogRelation;
 use App\Models\Character\CharacterGenome;
 use App\Models\Character\CharacterGenomeGene;
 use App\Models\Character\CharacterGenomeGradient;
 use App\Models\Character\CharacterGenomeNumeric;
+use App\Models\Character\CharacterImage;
+use App\Models\Character\CharacterTransfer;
 use App\Models\Genetics\Loci;
-use App\Models\Genetics\LociAllele;
 // END EXT
 
 use App\Models\Sales\SalesCharacter;
@@ -80,59 +78,67 @@ class CharacterManager extends Service {
         return $result;
     }
 
-    
     /**
-     * EXT: Character Genetics Data
-     * 
+     * EXT: Character Genetics Data.
+     *
      * Creates a new litter of MYOs.
      *
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @param  bool                   $isMyo
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return \App\Models\Character\Character|bool
      */
-    public function createMyoLitter($data, $user)
-    {
+    public function createMyoLitter($data, $user) {
         DB::beginTransaction();
         try {
             // Validate the parents.
-            if(!(isset($data['parents'])) || count($data['parents']) < 2) throw new \Exception("There needs to be 2 parents selected.");
-            if(count($data['parents']) > 2) throw new \Exception("Breedings of 3 or more parents are not supported.");
+            if (!(isset($data['parents'])) || count($data['parents']) < 2) {
+                throw new \Exception('There needs to be 2 parents selected.');
+            }
+            if (count($data['parents']) > 2) {
+                throw new \Exception('Breedings of 3 or more parents are not supported.');
+            }
 
             $parents = [];
             foreach ($data['parents'] as $index => $id) {
                 $parents[$index] = Character::where('id', $id)->first();
-                if (!$parents[$index]) throw new \Exception("Couldn't find parent #". $index .".");
-                if (!$parents[$index]->genomes) throw new \Exception("Parent #". $index ." doesn't have a genome.");
+                if (!$parents[$index]) {
+                    throw new \Exception("Couldn't find parent #".$index.'.');
+                }
+                if (!$parents[$index]->genomes) {
+                    throw new \Exception('Parent #'.$index." doesn't have a genome.");
+                }
             }
 
             // Get roller settings.
             $settings = [
-                'min_offspring'  => isset($data['min_offspring'])  ? max(0, $data['min_offspring']) : 0,
-                'max_offspring'  => isset($data['max_offspring'])  ? max(1, $data['max_offspring']) : 1,
-                'twin_chance'    => isset($data['twin_chance'])    ? max(0, min(100, $data['twin_chance'])) : 0,
-                'twin_depth'     => isset($data['twin_depth'])     ? max(0, $data['twin_depth']) : 1,
+                'min_offspring'  => isset($data['min_offspring']) ? max(0, $data['min_offspring']) : 0,
+                'max_offspring'  => isset($data['max_offspring']) ? max(1, $data['max_offspring']) : 1,
+                'twin_chance'    => isset($data['twin_chance']) ? max(0, min(100, $data['twin_chance'])) : 0,
+                'twin_depth'     => isset($data['twin_depth']) ? max(0, $data['twin_depth']) : 1,
                 'chimera_chance' => isset($data['chimera_chance']) ? max(0, min(100, $data['chimera_chance'])) : 0,
-                'max_genomes'    => isset($data['chimera_depth'])  ? max(1, $data['chimera_depth']) : 1,
-                'litter_limit'   => isset($data['litter_limit'])   ? max(1, $data['litter_limit']) : 1,
+                'max_genomes'    => isset($data['chimera_depth']) ? max(1, $data['chimera_depth']) : 1,
+                'litter_limit'   => isset($data['litter_limit']) ? max(1, $data['litter_limit']) : 1,
             ];
 
             // Create the Breeding Log.
             $litterLog = CharacterBreedingLog::create([
-                'name' => isset($data['name']) ? $data['name'] : null,
+                'name'            => $data['name'] ?? null,
                 'roller_settings' => $settings,
-                'rolled_at' => Carbon::now(),
-                'user_id' => $user->id,
+                'rolled_at'       => Carbon::now(),
+                'user_id'         => $user->id,
             ]);
 
             // Log the parents.
             foreach ($parents as $parent) {
                 $log = CharacterBreedingLogRelation::create([
-                    'log_id' => $litterLog->id,
+                    'log_id'       => $litterLog->id,
                     'character_id' => $parent->id,
-                    'is_parent' => true,
+                    'is_parent'    => true,
                 ]);
-                if (!$log) throw new \Exception("Couldn't generate parent log.");
+                if (!$log) {
+                    throw new \Exception("Couldn't generate parent log.");
+                }
             }
 
             // Generate the children...
@@ -140,15 +146,15 @@ class CharacterManager extends Service {
 
             $bool = isset($data['default_image']);
             $data += ['default_image' => true, 'feature_id' => [], 'feature_data' => []];
-            if( isset($data['generate_lineage']) && $data['generate_lineage'] && method_exists($this, 'handleCharacterLineage')) {
+            if (isset($data['generate_lineage']) && $data['generate_lineage'] && method_exists($this, 'handleCharacterLineage')) {
                 $data += [
                     // Character Lineages
                     'generate_ancestors' => true,
-                    'sire_id' => $parents[1]->id,
-                    'dam_id' => $parents[0]->id,
+                    'sire_id'            => $parents[1]->id,
+                    'dam_id'             => $parents[0]->id,
 
                     // WB Lineages
-                    'parent_type' => ["Character", "Character"],
+                    'parent_type' => ['Character', 'Character'],
                     'parent_data' => [$parents[0]->id, $parents[1]->id],
                 ];
             }
@@ -159,31 +165,41 @@ class CharacterManager extends Service {
                 // called from the mother's genome to ensure the matrilineal genes go first.
                 // random() allows for children of chimera to inherit from different genomes.
                 // the method returns the format of genome data used by handleCharacterGenome().
-                $genomes = [ $parents[0]->genomes->random()->breedWith($parents[1]->genomes->random()) ];
+                $genomes = [$parents[0]->genomes->random()->breedWith($parents[1]->genomes->random())];
                 $child = $this->createCharacter(
-                    ['name' => $data['name']." #".(count($litter)+1)] + $data + $genomes[0], $user, true,
+                    ['name' => $data['name'].' #'.(count($litter) + 1)] + $data + $genomes[0],
+                    $user,
+                    true,
                 );
-                if (!$child) throw new \Exception("Failed to generate child!");
+                if (!$child) {
+                    throw new \Exception('Failed to generate child!');
+                }
                 while (mt_rand(1, 100) <= $settings['chimera_chance'] && count($genomes) < $settings['max_genomes']) {
                     $genome = $parents[0]->genomes->random()->breedWith($parents[1]->genomes->random());
                     $geno = $this->handleCharacterGenome($genome, $child);
-                    if (!$geno) throw new \Exception("Chimerism roll failed to create genome.");
+                    if (!$geno) {
+                        throw new \Exception('Chimerism roll failed to create genome.');
+                    }
                     array_push($genomes, $genome);
                 }
 
                 // Creation finished, add them to the breeding log.
                 $log = CharacterBreedingLogRelation::create([
-                    'log_id' => $litterLog->id,
+                    'log_id'       => $litterLog->id,
                     'character_id' => $child->id,
-                    'is_parent' => false,
-                    'twin_id' => null,
-                    'chimerism' => count($genomes) > 1,
+                    'is_parent'    => false,
+                    'twin_id'      => null,
+                    'chimerism'    => count($genomes) > 1,
                 ]);
-                if (!$log) throw new \Exception("Failed to generate child log.");
+                if (!$log) {
+                    throw new \Exception('Failed to generate child log.');
+                }
 
                 // The litter size is increasing.
                 array_push($litter, $child);
-                if (count($litter) >= $settings['litter_limit']) break;
+                if (count($litter) >= $settings['litter_limit']) {
+                    break;
+                }
 
                 // *******************************************************
 
@@ -191,31 +207,41 @@ class CharacterManager extends Service {
                 $source = $child->id; // the character id of the current twin's source.
                 while (mt_rand(1, 100) <= $settings['twin_chance'] && $d < $settings['twin_depth'] && count($litter) < $settings['litter_limit']) {
                     // Grab this twin's genome from the genomes pool, then reset the pool.
-                    $genomes = [ $genomes[mt_rand(0, count($genomes)-1)] ];
+                    $genomes = [$genomes[mt_rand(0, count($genomes) - 1)]];
                     $child = $this->createCharacter(
-                        ['name' => $data['name']." #".(count($litter)+1)] + $data + $genomes[0], $user, true,
+                        ['name' => $data['name'].' #'.(count($litter) + 1)] + $data + $genomes[0],
+                        $user,
+                        true,
                     );
-                    if (!$child) throw new \Exception("Failed to generate twin!");
+                    if (!$child) {
+                        throw new \Exception('Failed to generate twin!');
+                    }
                     while (mt_rand(1, 100) <= $settings['chimera_chance'] && count($genomes) < $settings['max_genomes']) {
                         $genome = $parents[0]->genomes->random()->breedWith($parents[1]->genomes->random());
                         $geno = $this->handleCharacterGenome($genome, $child);
-                        if (!$geno) throw new \Exception("Twin chimerism roll failed to create genome.");
+                        if (!$geno) {
+                            throw new \Exception('Twin chimerism roll failed to create genome.');
+                        }
                         array_push($genomes, $genome);
                     }
 
                     // Creation finished, add them to the breeding log.
                     $log = CharacterBreedingLogRelation::create([
-                        'log_id' => $litterLog->id,
+                        'log_id'       => $litterLog->id,
                         'character_id' => $child->id,
-                        'is_parent' => false,
-                        'twin_id' => $source,
-                        'chimerism' => count($genomes) > 1,
+                        'is_parent'    => false,
+                        'twin_id'      => $source,
+                        'chimerism'    => count($genomes) > 1,
                     ]);
-                    if (!$log) throw new \Exception("Failed to generate child log.");
+                    if (!$log) {
+                        throw new \Exception('Failed to generate child log.');
+                    }
 
                     // The litter size is increasing.
                     array_push($litter, $child);
-                    if (count($litter) >= $settings['litter_limit']) break(2);
+                    if (count($litter) >= $settings['litter_limit']) {
+                        break 2;
+                    }
 
                     // This child becomes the new source, and the twin depth has increased.
                     $source = $child->id;
@@ -233,12 +259,12 @@ class CharacterManager extends Service {
             }
 
             return $this->commitReturn($litterLog);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
-
 
     /**
      * Creates a new character or MYO slot.
@@ -313,13 +339,14 @@ class CharacterManager extends Service {
             $character->character_image_id = $image->id;
             $character->save();
 
-            
             // Ext: Character Genetics Data
             // Can't and shouldn't always create a character with a genome.
             // Try create character genome if there's data for it.
             if (isset($data['gene_id'])) {
                 $genome = $this->handleCharacterGenome($data, $character);
-                if(!$genome) throw new \Exception("Error happened while trying to create genome.");
+                if (!$genome) {
+                    throw new \Exception('Error happened while trying to create genome.');
+                }
             }
 
             // Add a log for the character
@@ -1267,21 +1294,24 @@ class CharacterManager extends Service {
         return $this->rollbackReturn(false);
     }
 
-     /**
-     * EXT: Character Genetics Data
-     * 
+    /**
+     * EXT: Character Genetics Data.
+     *
      * Updates a character's genome.
      *
-     * @param  array                                  $data
-     * @param  \App\Models\Character\CharacterGenome  $genome
-     * @param  \App\Models\User\User                  $user
-     * @return  bool
+     * @param array                                 $data
+     * @param \App\Models\Character\CharacterGenome $genome
+     * @param \App\Models\User\User                 $user
+     * @param mixed                                 $character
+     *
+     * @return bool
      */
-    public function updateCharacterGenome($data, $character, $genome, $user)
-    {
+    public function updateCharacterGenome($data, $character, $genome, $user) {
         DB::beginTransaction();
         try {
-            if(!$user->hasPower("view_hidden_genetics")) throw new \Exception("You don't have the power to see this.");
+            if (!$user->hasPower('view_hidden_genetics')) {
+                throw new \Exception("You don't have the power to see this.");
+            }
 
             $this->handleCharacterGenome($data, $character, $genome, $user);
 
@@ -1289,9 +1319,10 @@ class CharacterManager extends Service {
             $this->createLog($user->id, null, null, null, $character->id, 'Character Updated', 'Genome edited', 'character', true);
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
@@ -2051,6 +2082,35 @@ class CharacterManager extends Service {
     }
 
     /**
+     * Deletes a character genome.
+     *
+     * @param \App\Models\Character\Character $character
+     * @param \App\Models\Character\Genome    $character
+     * @param mixed                           $genome
+     *
+     * @return bool
+     */
+    public function deleteCharacterGenome($character, $genome) {
+        DB::beginTransaction();
+        try {
+            if ($genome->character->id != $character->id) {
+                throw new \Exception('Wrong character.');
+            }
+
+            $genome->genes()->delete();
+            $genome->gradients()->delete();
+            $genome->numerics()->delete();
+            $genome->delete();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Handles character data.
      *
      * @param array $data
@@ -2103,21 +2163,21 @@ class CharacterManager extends Service {
         return false;
     }
 
-    
     /**
-     * EXT: Character Genetic Data
-     * 
+     * EXT: Character Genetic Data.
+     *
      * Handles character genome data.
      *
-     * @param  array                                  $data
-     * @param  \App\Models\Character\Character        $character
-     * @param  \App\Models\Character\CharacterGenome  $character
+     * @param array                                 $data
+     * @param \App\Models\Character\Character       $character
+     * @param \App\Models\Character\CharacterGenome $character
+     * @param mixed|null                            $genome
+     *
      * @return \App\Models\Character\CharacterGenome|bool
      */
-    private function handleCharacterGenome($data, $character, $genome = null)
-    {
+    private function handleCharacterGenome($data, $character, $genome = null) {
         try {
-            if(!$genome) {
+            if (!$genome) {
                 $genome = CharacterGenome::create(['character_id' => $character->id]);
             } else {
                 $genome->genes()->delete();
@@ -2129,40 +2189,47 @@ class CharacterManager extends Service {
             $gradientOffset = 0;
             $numOffset = 0;
 
-            foreach($data['gene_id'] as $index => $id)
-            {
+            foreach ($data['gene_id'] as $index => $id) {
                 $loci = Loci::where('id', $id)->first();
-                if($loci && $loci->type == "gene") {
-                    for ($i=0; $i < $loci->length; $i++) {
+                if ($loci && $loci->type == 'gene') {
+                    for ($i = 0; $i < $loci->length; $i++) {
                         $key = $alleleOffset;
-                        $allele = isset($data['gene_allele_id'][$key]) ? $data['gene_allele_id'][$key] : null;
-                        if($allele != null) CharacterGenomeGene::create([
-                            'character_genome_id' => $genome->id,
-                            'loci_allele_id' => $allele,
-                            'loci_id' => $loci->id,
-                        ]);
+                        $allele = $data['gene_allele_id'][$key] ?? null;
+                        if ($allele != null) {
+                            CharacterGenomeGene::create([
+                                'character_genome_id' => $genome->id,
+                                'loci_allele_id'      => $allele,
+                                'loci_id'             => $loci->id,
+                            ]);
+                        }
                         $alleleOffset++;
                     }
-                } elseif ($loci && $loci->type == "gradient") {
+                } elseif ($loci && $loci->type == 'gradient') {
                     $key = $gradientOffset;
-                    $value = isset($data['gene_gradient_data'][$key]) ? $data['gene_gradient_data'][$key] : null;
-                    $value = preg_replace(["/\+/", "/-/"], ["1", "0"], $value);
-                    while (strlen($value) < $loci->length) $value .= "0";
-                    if($value != null) CharacterGenomeGradient::create([
-                        'character_genome_id' => $genome->id,
-                        'loci_id' => $loci->id,
-                        'value' => $value,
-                    ]);
+                    $value = $data['gene_gradient_data'][$key] ?? null;
+                    $value = preg_replace(["/\+/", '/-/'], ['1', '0'], $value);
+                    while (strlen($value) < $loci->length) {
+                        $value .= '0';
+                    }
+                    if ($value != null) {
+                        CharacterGenomeGradient::create([
+                            'character_genome_id' => $genome->id,
+                            'loci_id'             => $loci->id,
+                            'value'               => $value,
+                        ]);
+                    }
                     $gradientOffset++;
-                } elseif ($loci && $loci->type == "numeric") {
+                } elseif ($loci && $loci->type == 'numeric') {
                     $key = $numOffset;
-                    $value = isset($data['gene_numeric_data'][$key]) ? $data['gene_numeric_data'][$key] : null;
+                    $value = $data['gene_numeric_data'][$key] ?? null;
                     $value = max(min(255, $value), 0);
-                    if($value != null) CharacterGenomeNumeric::create([
-                        'character_genome_id' => $genome->id,
-                        'loci_id' => $loci->id,
-                        'value' => $value,
-                    ]);
+                    if ($value != null) {
+                        CharacterGenomeNumeric::create([
+                            'character_genome_id' => $genome->id,
+                            'loci_id'             => $loci->id,
+                            'value'               => $value,
+                        ]);
+                    }
                     $numOffset++;
                 }
             }
@@ -2171,36 +2238,13 @@ class CharacterManager extends Service {
                 $genome->visibility_level = min(2, max(0, $data['genome_visibility']));
                 $genome->save();
             }
+
             return $genome;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return false;
-    }
-
-    /**
-     * Deletes a character genome.
-     *
-     * @param \App\Models\Character\Character  $character
-     * @param \App\Models\Character\Genome     $character
-     * @return bool
-     */
-    public function deleteCharacterGenome($character, $genome)
-    {
-        DB::beginTransaction();
-        try {
-            if ($genome->character->id != $character->id) throw new \Exception("Wrong character.");
-
-            $genome->genes()->delete();
-            $genome->gradients()->delete();
-            $genome->numerics()->delete();
-            $genome->delete();
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
     }
 
     /**
