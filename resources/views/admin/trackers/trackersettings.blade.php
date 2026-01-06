@@ -79,10 +79,10 @@
                                             @foreach ($field->field_options as $option)
                                                 <div class="child-row row mb-2 px-3">
                                                     <div class="col-md-2 px-1">
-                                                        {!! Form::number('field[' . $i . '][field_options][' . $i . '][point_value]', $option->point_value, ['class' => 'form-control w-100', 'placeholder' => 'Point Value']) !!}
+                                                        {!! Form::number('field[' . $i . '][field_options][' . $i . '][point_value]', $option['point_value'], ['class' => 'form-control w-100', 'placeholder' => 'Point Value']) !!}
                                                     </div>
                                                     <div class="col-md-4 px-1">
-                                                        {!! Form::text('field[' . $i . '][field_options][' . $i . '][label]', $option->label, ['class' => 'form-control w-100', 'placeholder' => 'Option Name']) !!}
+                                                        {!! Form::text('field[' . $i . '][field_options][' . $i . '][label]', $option['label'], ['class' => 'form-control w-100', 'placeholder' => 'Option Name']) !!}
                                                     </div>
                                                     <div class="col-md-6 px-1 d-flex">
                                                         {!! Form::text('field[' . $i . '][field_options][' . $i . '][description]', gettype($option->description) === 'string' ? $option->description : null, ['class' => 'form-control w-100', 'placeholder' => 'Option Description']) !!}
