@@ -587,10 +587,10 @@ class TrackerManager extends Service {
         }
 
         $currentLevel = $character->level;
-        
+
         $levels = Settings::get('xp_levels');
-        if(!$levels) {
-          return false;  
+        if (!$levels) {
+            return false;
         }
         $levels = (array) json_decode($levels);
         ksort($levels);
