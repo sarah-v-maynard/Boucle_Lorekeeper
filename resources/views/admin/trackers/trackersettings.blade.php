@@ -197,14 +197,14 @@
                     {!! Form::label('Word Count Options') !!}
                     <p>This is the rate at which word count is converted to {{ __('art_tracker.xp') }}. To enter the conversion use "Points|Word Count". Example: 1|100 would be 1 {{ __('art_tracker.xp') }} every 100 words.</p>
                     <div class="d-flex mb-2">
-                        {!! Form::text('word_count_conversion_rate', 0|0, ['class' => 'form-control mr-2', 'placeholder' => 'Word Count Conversion Rate (Use a | to separate)']) !!}
+                        {!! Form::text('word_count_conversion_rate', 0 | 0, ['class' => 'form-control mr-2', 'placeholder' => 'Word Count Conversion Rate (Use a | to separate)']) !!}
                         {!! Form::number('round_to', null, ['class' => 'form-control mr-2 roundTo', 'style' => 'display:none;', 'placeholder' => 'Round to the Nearest']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::checkbox('enable_rounding', 1, 0, ['class' => 'form-check-input enable-rounding', 'data-toggle' => 'toggle']) !!}
                         {!! Form::label('enable_rounding', 'Enable Rounding', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Enable to create a rounding rule for literature word counts.') !!}
                     </div>
-                </div>    
+                </div>
             @endif
         </div>
     </div>
