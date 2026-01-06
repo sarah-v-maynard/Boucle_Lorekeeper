@@ -26,49 +26,49 @@
                 </div>
                 <div class="col-md-9">
                     <div class="px-4 line-rows">
-                            <?php
-                            $total = 0;
-                            $i = 0;
-                            ?>
-                            @if (count($cardData) > 1)
-                                <div class="accordion" id="MultiTracker">
-                                    <?php $sb = 0; ?>
-                                    @foreach ($cardData as $title => $value)
-                                        @if (gettype($value) === 'array')
-                                            <?php $ssb = 0; ?>
-                                            @foreach ($value as $sub_title => $sub_value)
-                                                <div class="card">
-                                                    <div class="card-header" id="subHeading-{{ $sb }}">
-                                                        <h4 class="mb-0">
-                                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-{{ $sb }}" aria-expanded="true"
-                                                                aria-controls="collapse-{{ $sb }}">Sub-Tracker #{{ $sb }}</button>
-                                                        </h4>
-                                                    </div>
-                                                    <div id="collapse-{{ $sb }}" class="collapse {{ $sb === 0 ? 'show' : '' }}" aria-labelledby="subHeading-{{ $sb }}" data-parent="#MultiTracker">
-                                                        <div class="card-body">
-                                                            @include('tracker._tracker_group', ['title' => $sub_title, 'cardData' => $sub_value, 'i' => $i])
-                                                        </div>
+                        <?php
+                        $total = 0;
+                        $i = 0;
+                        ?>
+                        @if (count($cardData) > 1)
+                            <div class="accordion" id="MultiTracker">
+                                <?php $sb = 0; ?>
+                                @foreach ($cardData as $title => $value)
+                                    @if (gettype($value) === 'array')
+                                        <?php $ssb = 0; ?>
+                                        @foreach ($value as $sub_title => $sub_value)
+                                            <div class="card">
+                                                <div class="card-header" id="subHeading-{{ $sb }}">
+                                                    <h4 class="mb-0">
+                                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-{{ $sb }}" aria-expanded="true"
+                                                            aria-controls="collapse-{{ $sb }}">Sub-Tracker #{{ $sb }}</button>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse-{{ $sb }}" class="collapse {{ $sb === 0 ? 'show' : '' }}" aria-labelledby="subHeading-{{ $sb }}" data-parent="#MultiTracker">
+                                                    <div class="card-body">
+                                                        @include('tracker._tracker_group', ['title' => $sub_title, 'cardData' => $sub_value, 'i' => $i])
                                                     </div>
                                                 </div>
-                                                <?php $ssb++; ?>
-                                            @endforeach
-                                        @endif
-                                        <?php $sb++; ?>
-                                    @endforeach
-                                </div>
-                            @else
-                                @foreach ($cardData as $title => $value)
-                                    @include('tracker._tracker_group', ['title' => $title, 'value' => $value, 'i' => $i])
-                                    <?php
-                                    $i++;
-                                    ?>
+                                            </div>
+                                            <?php $ssb++; ?>
+                                        @endforeach
+                                    @endif
+                                    <?php $sb++; ?>
                                 @endforeach
-                            @endif
-                        </div>
-                        <div class="text-right">
-                            <a href="#" id="addGroup" class="btn btn-sm btn-primary mt-2">Add Group</a>
-                            <a href="#" id="addLine" class="btn btn-sm btn-primary mt-2">Add Line</a>
-                        </div>
+                            </div>
+                        @else
+                            @foreach ($cardData as $title => $value)
+                                @include('tracker._tracker_group', ['title' => $title, 'value' => $value, 'i' => $i])
+                                <?php
+                                $i++;
+                                ?>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="text-right">
+                        <a href="#" id="addGroup" class="btn btn-sm btn-primary mt-2">Add Group</a>
+                        <a href="#" id="addLine" class="btn btn-sm btn-primary mt-2">Add Line</a>
+                    </div>
                 </div>
             </div>
         </div>
