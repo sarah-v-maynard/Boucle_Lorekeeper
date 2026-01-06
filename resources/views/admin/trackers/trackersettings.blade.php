@@ -79,10 +79,10 @@
                                             @foreach ($field->field_options as $option)
                                                 <div class="child-row row mb-2 px-3">
                                                     <div class="col-md-2 px-1">
-                                                        {!! Form::number('field[' . $i . '][field_options][' . $i . '][point_value]', $option->point_value, ['class' => 'form-control w-100', 'placeholder' => 'Point Value']) !!}
+                                                        {!! Form::number('field[' . $i . '][field_options][' . $i . '][point_value]', $option['point_value'], ['class' => 'form-control w-100', 'placeholder' => 'Point Value']) !!}
                                                     </div>
                                                     <div class="col-md-4 px-1">
-                                                        {!! Form::text('field[' . $i . '][field_options][' . $i . '][label]', $option->label, ['class' => 'form-control w-100', 'placeholder' => 'Option Name']) !!}
+                                                        {!! Form::text('field[' . $i . '][field_options][' . $i . '][label]', $option['label'], ['class' => 'form-control w-100', 'placeholder' => 'Option Name']) !!}
                                                     </div>
                                                     <div class="col-md-6 px-1 d-flex">
                                                         {!! Form::text('field[' . $i . '][field_options][' . $i . '][description]', gettype($option->description) === 'string' ? $option->description : null, ['class' => 'form-control w-100', 'placeholder' => 'Option Description']) !!}
@@ -179,18 +179,33 @@
             <p>Configure the {{ __('art_tracker.xp') }} points for literature here. Note that this ONLY applies to word count, the rest is shared with the general {{ __('art_tracker.xp') }} calculator settings. Leave all blank to disable.</p>
         </div>
         <div class="card-body">
-            <div class="form-group">
-                {!! Form::label('Word Count Options') !!}
-                <p>This is the rate at which word count is converted to {{ __('art_tracker.xp') }}. To enter the conversion use "Points|Word Count". Example: 1|100 would be 1 {{ __('art_tracker.xp') }} every 100 words.</p>
-                <div class="d-flex mb-2">
-                    {!! Form::text('word_count_conversion_rate', $lit_settings->conversion_rate, ['class' => 'form-control mr-2', 'placeholder' => 'Word Count Conversion Rate']) !!}
-                    {!! Form::number('round_to', $lit_settings->round_to, ['class' => 'form-control mr-2 roundTo', 'style' => $lit_settings->round_to ? '' : 'display:none;', 'placeholder' => 'Round to the Nearest']) !!}
-                </div>
+            @if ($lit_settings)
                 <div class="form-group">
-                    {!! Form::checkbox('enable_rounding', 1, $lit_settings->round_to ? 1 : 0, ['class' => 'form-check-input enable-rounding', 'data-toggle' => 'toggle']) !!}
-                    {!! Form::label('enable_rounding', 'Enable Rounding', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Enable to create a rounding rule for literature word counts.') !!}
+                    {!! Form::label('Word Count Options') !!}
+                    <p>This is the rate at which word count is converted to {{ __('art_tracker.xp') }}. To enter the conversion use "Points|Word Count". Example: 1|100 would be 1 {{ __('art_tracker.xp') }} every 100 words.</p>
+                    <div class="d-flex mb-2">
+                        {!! Form::text('word_count_conversion_rate', $lit_settings->conversion_rate, ['class' => 'form-control mr-2', 'placeholder' => 'Word Count Conversion Rate']) !!}
+                        {!! Form::number('round_to', $lit_settings->round_to, ['class' => 'form-control mr-2 roundTo', 'style' => $lit_settings->round_to ? '' : 'display:none;', 'placeholder' => 'Round to the Nearest']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::checkbox('enable_rounding', 1, $lit_settings->round_to ? 1 : 0, ['class' => 'form-check-input enable-rounding', 'data-toggle' => 'toggle']) !!}
+                        {!! Form::label('enable_rounding', 'Enable Rounding', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Enable to create a rounding rule for literature word counts.') !!}
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="form-group">
+                    {!! Form::label('Word Count Options') !!}
+                    <p>This is the rate at which word count is converted to {{ __('art_tracker.xp') }}. To enter the conversion use "Points|Word Count". Example: 1|100 would be 1 {{ __('art_tracker.xp') }} every 100 words.</p>
+                    <div class="d-flex mb-2">
+                        {!! Form::text('word_count_conversion_rate', 0|0, ['class' => 'form-control mr-2', 'placeholder' => 'Word Count Conversion Rate (Use a | to separate)']) !!}
+                        {!! Form::number('round_to', null, ['class' => 'form-control mr-2 roundTo', 'style' => 'display:none;', 'placeholder' => 'Round to the Nearest']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::checkbox('enable_rounding', 1, 0, ['class' => 'form-check-input enable-rounding', 'data-toggle' => 'toggle']) !!}
+                        {!! Form::label('enable_rounding', 'Enable Rounding', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Enable to create a rounding rule for literature word counts.') !!}
+                    </div>
+                </div>    
+            @endif
         </div>
     </div>
 
@@ -207,7 +222,7 @@
     <script>
         $(document).ready(function() {
 
-            $field_count = {{ count($xp_calc_data) ?? 1 }};
+            $field_count = {{ $xp_calc_data && count($xp_calc_data) > 0 ? 1 : 0 }};
 
             $('.enable-rounding').on('change', function() {
                 console.log('rounding changed');
