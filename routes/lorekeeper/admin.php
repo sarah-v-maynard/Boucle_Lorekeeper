@@ -322,6 +322,9 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
     Route::post('items', 'GrantController@postItems');
 
     Route::get('item-search', 'GrantController@getItemSearch');
+
+    Route::get('xp', 'GrantController@getXP');
+    Route::post('xp', 'GrantController@postXP');
 });
 
 // MASTERLIST
@@ -496,3 +499,16 @@ Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'],
     Route::post('vote/{id}/{action}', 'DesignController@postVote')->where('action', 'approve|reject');
 });
 Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'myo-approvals|design-approvals')->where('status', 'pending|approved|rejected');
+
+// ART TRACKER
+Route::group(['prefix' => 'trackers', 'middleware' => 'power:manage_submissions'], function () {
+    Route::get('/', 'TrackerController@getTrackerIndex');
+    Route::get('/{status}', 'TrackerController@getTrackerIndex')->where('status', 'pending|approved|rejected');
+    Route::get('edit/{id}', 'TrackerController@getTrackerCard');
+    Route::post('edit/{id}/{action}', 'TrackerController@postTrackerCard')->where('action', 'approve|reject|cancel');
+});
+Route::group(['prefix' => 'tracker-settings', 'middleware' => 'power:edit_data'], function () {
+    Route::get('/', 'TrackerController@getTrackerSettingsPage');
+    Route::post('/', 'TrackerController@saveTrackerSettings');
+    Route::post('/edit', 'TrackerController@saveTrackerSettings')->where('action', 'edit');
+});

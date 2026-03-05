@@ -82,14 +82,26 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
     Route::get('{slug}/ownership', 'CharacterController@getCharacterOwnershipLogs');
     Route::get('{slug}/change-log', 'CharacterController@getCharacterLogs');
     Route::get('{slug}/submissions', 'CharacterController@getCharacterSubmissions');
+    Route::get('{slug}/xp-logs', 'CharacterController@getCharacterXPLogs');
 
     Route::get('{slug}/gallery', 'CharacterController@getCharacterGallery');
+    Route::get('{slug}/tracker', 'CharacterController@getCharacterTracker');
 });
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
     Route::get('{id}', 'MyoController@getCharacter');
     Route::get('{id}/profile', 'MyoController@getCharacterProfile');
     Route::get('{id}/ownership', 'MyoController@getCharacterOwnershipLogs');
     Route::get('{id}/change-log', 'MyoController@getCharacterLogs');
+});
+
+/**************************************************************************************************
+    Art Tracker Cards
+**************************************************************************************************/
+
+Route::group(['prefix' => 'tracker'], function () {
+    Route::get('/{id}', 'TrackerController@getTrackerCard');
+    Route::get('/{id}/edit', 'TrackerController@getEditableTrackerCard');
+    Route::post('/{id}/request-edit', 'TrackerController@postTrackerCardEditRequest');
 });
 
 /**************************************************************************************************
@@ -173,3 +185,9 @@ Route::group(['prefix' => 'gallery'], function () {
 Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function () {
     Route::get('/bug-reports', 'ReportController@getBugIndex');
 });
+
+/**************************************************************************************************
+    XP Calculator
+**************************************************************************************************/
+Route::get('/submit-xp', 'XPCalcController@getXPCalc');
+Route::post('/submit-xp', 'XPCalcController@postXPForm');

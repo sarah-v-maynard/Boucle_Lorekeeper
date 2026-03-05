@@ -157,4 +157,9 @@ class Notification extends Model {
     public const GALLERY_SUBMISSION_STAFF_COMMENTS = 513;
     public const GALLERY_SUBMISSION_EDITED = 514;
     public const GALLERY_SUBMISSION_PARTICIPANT = 515;
+    public const TRACKER_SUBMISSION_APPROVED = 781;
+    public const TRACKER_SUBMISSION_REJECTED = 782;
+    public const TRACKER_SUBMISSION_CANCELLED = 783;
+    public const XP_GRANT = 784;
+    public const CHARACTER_LEVEL_UP = 785;
 }

@@ -13,6 +13,7 @@ use App\Models\Currency\Currency;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
+use App\Models\Tracker\Tracker;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
 use App\Models\User\UserItem;
@@ -20,6 +21,7 @@ use App\Services\CharacterManager;
 use App\Services\CurrencyManager;
 use App\Services\DesignUpdateManager;
 use App\Services\InventoryManager;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -416,6 +418,21 @@ class CharacterController extends Controller {
     }
 
     /**
+     * Shows a character's XP logs.
+     *
+     * @param mixed $slug
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterXPLogs($slug) {
+        return view('character.xp_logs', [
+            'character'             => $this->character,
+            'extPrevAndNextBtnsUrl' => '/xp-logs',
+            'logs'                  => $this->character->getXPLogs(0),
+        ]);
+    }
+
+    /**
      * Shows a character's submissions.
      *
      * @param mixed $slug
@@ -549,6 +566,28 @@ class CharacterController extends Controller {
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Shows a character's tracker.
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterTracker(Request $request, $slug) {
+        $trackers = Tracker::renderAllCards($this->character->id);
+        $levels = json_decode(DB::table('site_settings')->where('key', 'xp_levels')->pluck('value')->first());
+
+        return view('character.tracker', [
+            'character'             => $this->character,
+            'levels'                => $levels,
+            'progress'              => Tracker::getXpProgressBar($trackers['accepted_points']),
+            'current_level'         => Tracker::getCurrentLevel($trackers['accepted_points']),
+            'tracker_cards'         => $trackers['cards'],
+            'total_xp'              => $trackers['total_points'],
+            'total_accepted'        => $trackers['accepted_points'],
+        ]);
     }
 
     /**

@@ -437,4 +437,35 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url'     => 'gallery/view/{submission_id}',
     ],
+
+    // TRACKER_SUBMISSION_CREATED
+    781 => [
+        'name'    => 'Tracker Card Approved',
+        'message' => 'Your tracker card <strong>Tracker Card #{tracker_id}</strong> for {character_name} has been approved. (<a href="{url}">View Card</a>)',
+        'url'     => 'tracker/{tracker_id}',
+    ],
+
+    782 => [
+        'name'    => 'Tracker Card Rejected',
+        'message' => 'Your tracker card <strong>Tracker Card #{tracker_id}</strong> for {character_name} has been rejected. (<a href="{url}">View Card</a>)',
+        'url'     => 'tracker/{tracker_id}',
+    ],
+
+    783 => [
+        'name'    => 'Tracker Card Cancelled',
+        'message' => 'Your tracker card <strong>Tracker Card #{tracker_id}</strong> for {character_name} has been cancelled. (<a href="{url}">View Card</a>)',
+        'url'     => 'tracker/{tracker_id}',
+    ],
+    // TRACKER_GRANT
+    784 => [
+        'name'    => 'XP Grant',
+        'message' => '{character_name} was granted a total of {xp_points} XP by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Character</a>)',
+        'url'     => 'character/{slug}',
+    ],
+    // CHARACTER_LEVEL_UP
+    785 => [
+        'name'    => 'Character Level Up',
+        'message' => '{character_name} has leveled up to Level {new_level}! (<a href="{url}">View Character</a>)',
+        'url'     => 'character/{slug}',
+    ],
 ];

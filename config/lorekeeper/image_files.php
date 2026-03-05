@@ -62,4 +62,9 @@ return [
         'description' => 'Thumbnail used for gallery submissions with a set content warning. PNG format, size of masterlist thumbnails.',
         'filename'    => 'content_warning.png',
     ],
+    'content_warning' => [
+        'name'        => 'Tracker Card Fallback',
+        'description' => 'Thumbnail used tracker cards when either none is input or it is a grant.',
+        'filename'    => 'tracker_fallback.png',
+    ],
 ];
