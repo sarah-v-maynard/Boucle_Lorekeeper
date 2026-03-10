@@ -245,6 +245,11 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('Gender') !!}
+            {!! Form::text('BOUC_gender', old('BOUC_gender'), ['class' => 'form-control']) !!}
+        </div>
+
+        <div class="form-group">
             {!! Form::label('Traits') !!} @if ($isMyo)
                 {!! add_help(
                     'These traits will be listed as required traits for the slot. The user will still be able to add on more traits, but not be able to remove these. This is allowed to conflict with the rarity above; you may add traits above the character\'s specified rarity.',

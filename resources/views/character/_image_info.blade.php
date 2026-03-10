@@ -56,6 +56,12 @@
                     </div>
                     <div class="col-lg-8 col-7 pl-1">{!! $image->rarity_id ? $image->rarity->displayName : 'None' !!}</div>
                 </div>
+                <div class="row no-gutters">
+                    <div class="col-lg-4 col-5">
+                        <h5>Gender</h5>
+                    </div>
+                    <div class="col-lg-8 col-7 pl-1">{!! $character->BOUC_gender ? $character->BOUC_gender : 'Not set' !!}</div> 
+                </div>
 
                 <div class="mb-3">
                     <div>

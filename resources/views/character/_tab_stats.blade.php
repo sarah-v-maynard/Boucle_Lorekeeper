@@ -18,6 +18,14 @@
     </div>
     <div class="col-lg-9 col-7">{!! format_date($character->created_at) !!}</div>
 </div>
+<div class="row">
+    <div class="col-lg-2 col-md-6 col-4">
+        <h5>Gender</h5>
+    </div>
+    <div class="col-lg-10 col-md-6 col-8">
+        {!! $character->BOUC_gender ? $character->BOUC_gender : 'Not set' !!}
+    </div>
+</div>
 
 <hr />
 

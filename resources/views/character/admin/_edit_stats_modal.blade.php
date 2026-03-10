@@ -25,6 +25,11 @@
     </div>
 @endif
 
+<div class="form-group">
+    {!! Form::label('Gender') !!}
+    {!! Form::text('BOUC_gender', $character->BOUC_gender, ['class' => 'form-control']) !!}
+</div>
+
 <div class="alert alert-info">
     These are displayed on the character's profile, but don't have any effect on site functionality except for the following:
     <ul>
