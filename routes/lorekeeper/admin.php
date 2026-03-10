@@ -381,6 +381,8 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware'
 
     Route::post('{slug}/images/sort', 'CharacterImageController@postSortImages');
 
+    Route::post('image/{id}/colours', 'CharacterImageController@postImageColours');
+
     // CHARACTER
     Route::get('{slug}/stats', 'CharacterController@getEditCharacterStats');
     Route::post('{slug}/stats', 'CharacterController@postEditCharacterStats');
@@ -407,6 +409,10 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware'
     Route::get('{slug}/genome/{id}/delete', 'CharacterController@getDeleteCharacterGenome');
     Route::post('{slug}/genome/{id}/delete', 'CharacterController@postDeleteCharacterGenome');
     // END EXT
+
+    # LINEAGE
+    Route::get('{slug}/lineage', 'CharacterLineageController@getEditCharacterLineage');
+    Route::post('{slug}/lineage', 'CharacterLineageController@postEditCharacterLineage');
 });
 // Might rewrite these parts eventually so there's less code duplication...
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function () {
@@ -436,6 +442,10 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters', 'middleware' => 'p
     Route::get('{id}/genome/{gid}/delete', 'CharacterController@getDeleteMyoGenome');
     Route::post('{id}/genome/{gid}/delete', 'CharacterController@postDeleteMyoGenome');
     // END EXT
+
+    # LINEAGE
+    Route::get('{id}/lineage', 'CharacterLineageController@getEditMyoLineage');
+    Route::post('{id}/lineage', 'CharacterLineageController@postEditMyoLineage');
 });
 
 // RAFFLES
@@ -496,3 +506,9 @@ Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'],
     Route::post('vote/{id}/{action}', 'DesignController@postVote')->where('action', 'approve|reject');
 });
 Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'myo-approvals|design-approvals')->where('status', 'pending|approved|rejected');
+
+// PAIRINGS
+Route::group(['prefix' => 'pairings', 'middleware' => 'power:manage_raffles'], function () {
+    Route::get('roller', 'PairingController@getRoller');
+    Route::post('roller', 'PairingController@postRoll');
+});

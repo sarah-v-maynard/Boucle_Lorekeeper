@@ -11,6 +11,7 @@ use App\Models\Character\CharacterTransfer; /* EXT: Character Genetics Data */
 use App\Models\Feature\Feature; /* EXT: Character Genetics Data */
 /* EXT: Character Genetics Data */
 use App\Models\Genetics\Loci;
+use App\Models\Character\CharacterLineageBlacklist;
 use App\Models\Rarity;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
@@ -58,6 +59,7 @@ class CharacterController extends Controller {
             'genes'       => ['0' => 'Select Gene Group'] + Loci::orderBy('sort', 'desc')->pluck('name', 'id')->toArray(),
             'features'    => Feature::getDropdownItems(1),
             'isMyo'       => false,
+            'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
         ]);
     }
 
@@ -75,6 +77,7 @@ class CharacterController extends Controller {
             'genes'       => ['0' => 'Select Gene Group'] + Loci::orderBy('sort', 'desc')->pluck('name', 'id')->toArray(),
             'features'    => Feature::getDropdownItems(1),
             'isMyo'       => true,
+            'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
         ]);
     }
 
@@ -130,6 +133,7 @@ class CharacterController extends Controller {
             'gene_id', 'gene_allele_id', 'gene_numeric_data', 'gene_gradient_data',
             'genome_visibility',
             'image', 'thumbnail', 'image_description',
+            'sex', 'parent_1_id', 'parent_2_id',
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();
@@ -164,6 +168,7 @@ class CharacterController extends Controller {
             'gene_id', 'gene_allele_id', 'gene_numeric_data', 'gene_gradient_data',
             'genome_visibility',
             'image', 'thumbnail',
+            'parent_1_id', 'parent_2_id',
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();
