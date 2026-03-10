@@ -1350,7 +1350,7 @@ class CharacterManager extends Service {
             $characterData = Arr::only($data, [
                 'character_category_id',
                 'number', 'slug',
-                'BOUC_gender', #BOUC-specific fields
+                'BOUC_gender', //BOUC-specific fields
             ]);
             $characterData['is_sellable'] = isset($data['is_sellable']);
             $characterData['is_tradeable'] = isset($data['is_tradeable']);
@@ -2139,7 +2139,7 @@ class CharacterManager extends Service {
                 'character_category_id', 'rarity_id', 'user_id',
                 'number', 'slug', 'description',
                 'sale_value', 'transferrable_at', 'is_visible',
-                'BOUC_gender', #BOUC-specific fields
+                'BOUC_gender', //BOUC-specific fields
             ]);
 
             $characterData['name'] = ($isMyo && isset($data['name'])) ? $data['name'] : null;

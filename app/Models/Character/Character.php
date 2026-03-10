@@ -33,7 +33,7 @@ class Character extends Model {
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
         'is_myo_slot', 'name', 'trade_id', 'owner_url',
-        'BOUC_gender', # BOUC-specific fields
+        'BOUC_gender', // BOUC-specific fields
     ];
 
     /**
@@ -82,7 +82,7 @@ class Character extends Model {
         'image'                 => 'required|mimes:jpeg,jpg,gif,png|max:2048',
         'thumbnail'             => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
         'owner_url'             => 'url|nullable',
-        'BOUC_gender'           => 'nullable|in:Stallion,Mare,Hermaphodite (Stallion-presenting),Hermaphrodite (Mare-presenting),Hermaphodite (Infertile),other', # BOUC-specific fields
+        'BOUC_gender'           => 'nullable|in:Stallion,Mare,Hermaphodite (Stallion-presenting),Hermaphrodite (Mare-presenting),Hermaphodite (Infertile),other', // BOUC-specific fields
     ];
 
     /**
@@ -98,7 +98,7 @@ class Character extends Model {
         'sale_value'            => 'nullable',
         'image'                 => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
         'thumbnail'             => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
-        'BOUC_gender'           => 'nullable|in:Stallion,Mare,Hermaphodite (Stallion-presenting),Hermaphrodite (Mare-presenting),Hermaphodite (Infertile),other', # BOUC-specific fields
+        'BOUC_gender'           => 'nullable|in:Stallion,Mare,Hermaphodite (Stallion-presenting),Hermaphrodite (Mare-presenting),Hermaphodite (Infertile),other', // BOUC-specific fields
     ];
 
     /**
@@ -107,16 +107,16 @@ class Character extends Model {
      * @var array
      */
     public static $myoRules = [
-        'rarity_id'   => 'nullable',
-        'user_id'     => 'nullable',
-        'number'      => 'nullable',
-        'slug'        => 'nullable',
-        'description' => 'nullable',
-        'sale_value'  => 'nullable',
-        'name'        => 'required',
-        'image'       => 'nullable|mimes:jpeg,gif,png|max:2048',
-        'thumbnail'   => 'nullable|mimes:jpeg,gif,png|max:2048',
-        'BOUC_gender'           => 'nullable|in:Stallion,Mare,Hermaphodite (Stallion-presenting),Hermaphrodite (Mare-presenting),Hermaphodite (Infertile),other', # BOUC-specific fields
+        'rarity_id'             => 'nullable',
+        'user_id'               => 'nullable',
+        'number'                => 'nullable',
+        'slug'                  => 'nullable',
+        'description'           => 'nullable',
+        'sale_value'            => 'nullable',
+        'name'                  => 'required',
+        'image'                 => 'nullable|mimes:jpeg,gif,png|max:2048',
+        'thumbnail'             => 'nullable|mimes:jpeg,gif,png|max:2048',
+        'BOUC_gender'           => 'nullable|in:Stallion,Mare,Hermaphodite (Stallion-presenting),Hermaphrodite (Mare-presenting),Hermaphodite (Infertile),other', // BOUC-specific fields
     ];
 
     /**********************************************************************************************

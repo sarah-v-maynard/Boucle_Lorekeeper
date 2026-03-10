@@ -130,7 +130,7 @@ class CharacterController extends Controller {
             'gene_id', 'gene_allele_id', 'gene_numeric_data', 'gene_gradient_data',
             'genome_visibility',
             'image', 'thumbnail', 'image_description',
-            'BOUC_gender', # BOUC-specific fields
+            'BOUC_gender', // BOUC-specific fields
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();
@@ -165,7 +165,7 @@ class CharacterController extends Controller {
             'gene_id', 'gene_allele_id', 'gene_numeric_data', 'gene_gradient_data',
             'genome_visibility',
             'image', 'thumbnail',
-            'BOUC_gender', # BOUC-specific fields
+            'BOUC_gender', // BOUC-specific fields
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();
@@ -236,7 +236,7 @@ class CharacterController extends Controller {
             'character_category_id', 'number', 'slug',
             'is_giftable', 'is_tradeable', 'is_sellable', 'sale_value',
             'transferrable_at',
-            'BOUC_gender', # BOUC-specific fields
+            'BOUC_gender', // BOUC-specific fields
         ]);
         $this->character = Character::where('slug', $slug)->first();
         if (!$this->character) {
