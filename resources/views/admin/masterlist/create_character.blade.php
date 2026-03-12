@@ -286,7 +286,7 @@
             </div>
         </div>
 
-    <hr class="my-4">
+        <hr class="my-4">
 
         <h3>Lineage (Optional)</h3>
         <div class="alert alert-info">

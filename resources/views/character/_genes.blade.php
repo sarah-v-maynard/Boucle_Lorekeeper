@@ -43,12 +43,12 @@
                                 foreach ($genome->genes->where('loci_allele_id', $allele->id) as $item) {
                                     echo $item->allele->displayName . '-';
                                     break 2;
-                                };
-                            };
+                                }
+                            }
                         } else {
                             foreach ($genome->genes->where('loci_id', $loci->id) as $item) {
                                 echo $item->allele->displayName;
-                            };
+                            }
                         }
                     } elseif ($loci->type == 'gradient') {
                         $i = 0;
